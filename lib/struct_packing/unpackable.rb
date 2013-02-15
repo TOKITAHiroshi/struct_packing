@@ -19,6 +19,8 @@ module StructPacking
       
       alias :from_data :unpack
 
+      private
+      
       def unpack_to_hash(bytes)
         data = {}
         byte_format.each do |name, param|
@@ -35,9 +37,11 @@ module StructPacking
         
         h.keys.each do |name|
           begin
-            obj.instance_eval("self.#{name} = #{h[name]}")
+            if not h[name] == nil
+              obj.instance_eval("self.#{name} = #{h[name]}")
+            end
           rescue NoMethodError => nme
-            p nme
+            ;
           end
         end
         obj
