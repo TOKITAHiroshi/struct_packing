@@ -6,32 +6,36 @@
 
 * Read/Write ruby object to byte array with C-like struct declarations.
 
-== FEATURES/PROBLEMS:
-
-* Simple read/write ruby-object to formatted byte array.
-
-== SYNOPSIS:
-
-# Packing object to byte array.
-
-class MyStruct < OpenStruct
-  include StructPacking::Packable
-  self.byte_format = "uint32 hoge; int fuga; byte[1] piyo;"
-end
-
-obj = MyStruct.new
-sd.hoge = 1
-sd.fuga = 2
-sd.piyo = [8]
-packed_struct = obj.pack # => "\x01\x00\x00\x00\x02\x00\x00\x00\b"
-
-== REQUIREMENTS:
-
-* none
-
 == INSTALL:
 
 * sudo gem install struct_packing
+
+
+== SYNOPSIS:
+=== Packing object to byte array.
+  class PackableOStruct < OpenStruct
+    include StructPacking::Packable
+    self.byte_format = "int foo; char bar; byte[1] baz;"
+  end
+
+  obj = PackableOStruct.new
+  obj.foo = 1
+  obj.bar = 2
+  obj.baz = [8]
+  packed_bytes = obj.pack # => "\x01\x00\x00\x00\x02\b"
+
+
+=== Read object attributes from byte array.
+  class UnpackableOStruct < OpenStruct
+    include StructPacking::Unpackable
+    self.byte_format = "char foo; byte[1] bar; int baz;"
+  end
+
+  obj = UnpackableOStruct.from_data [1, 2, 3, 0, 0, 0].pack("C*")
+  obj.foo # => 1
+  obj.bar # => [2]
+  obj.baz # => 3
+
 
 == LICENSE:
 

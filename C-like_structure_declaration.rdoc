@@ -1,0 +1,117 @@
+= C-language like structure declaration
+
+== Overview:
+
+StructPacking uses "C like structure declaration" to define 
+object packing byte array format.
+It is mostly compatible with struct definition in C language, and
+some extended notation to support byte packing function in Ruby language.
+
+This is mainly use to genarate Ruby pack template string from C language's struct
+declaration.
+
+== Syntax:
+Syntax is same as C-language variable declaration.
+  [sign-modifier] <type> <variable-name> [ [array-length] ];
+
+
+== Type:
+* Traditional C language's types.
+  * char
+  * short
+  * int
+  * long
+  * long long
+  * float
+  * double
+
+
+* C99 types.
+  * int8_t
+  * int16_t
+  * int32_t
+  * int64_t
+  * uint8_t
+  * uint16_t
+  * uint32_t
+  * uint64_t
+
+* Extend keyword for Ruby pack string support.
+  * ascii
+  * utf8
+  * big
+  * big16
+  * big32
+  * little
+  * little16
+  * little32
+  * big float
+  * little float
+  * big double
+  * little double
+
+== Variable-name:
+Variable-name is identifier of this variable.
+This is must unique in this struct.
+
+In StructPacking package, variable-name is used to make relation object
+with struct definition.
+Packing function is get value from object's attr-getter which is same name as
+variable-name, and pack the value toC-like_structure_declaration.rdoc 
+
+== Array-length
+If "[]" is placed after variable-name, this variable define as array.
+
+== Sign-modifier:
+* signed 
+* unsigned
+are sign-modifier.
+
+== Bit-field
+* TODO
+
+
+== Ruby pack template mapping:
+
+* Signed (or not assinged)
+
+*char*::      "c"
+*int8_t*::      "c"
+*short*::     "s"
+*int16_t*::     "s"
+*int*::       "i"
+*int32_t*::     "l"
+*long*::        "l"
+*long* *long*:: "q"
+*int64_t*::       "q"
+*float*::       "f"
+*double*::       "d"
+
+* Unsigned
+
+*unsigned* *char*::        "C"
+*uint8_t*::                  "C"
+*unsigned* *short*::       "S"
+*uint16_t*::                 "S"
+*unsigned* *int*::         "I"
+*unsigned* *long*::        "L"
+*uint32_t*::                 "L"
+*unsigned* *long* *long*:: "Q"
+*uint64_t*::                 "Q"
+
+* Extend types
+
+*ascii*:: "a"
+*utf8*:: "U"
+*big*:: "N"
+*big16*:: "n"
+*big32*:: "N"
+*little*:: "V"
+*little16*:: "v"
+*little32*:: "V"
+*big* *float*:: "g"
+*little* *float*:: "e"
+*big* *double*:: "G"
+*little* *double*:: "E"
+
+

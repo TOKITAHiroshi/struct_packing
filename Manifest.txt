@@ -1,6 +1,5 @@
 History.txt
-Manifest.txt
-PostInstall.txt
+C-like_structure_declaration.rdoc
 README.rdoc
 Rakefile
 lib/struct_packing.rb
