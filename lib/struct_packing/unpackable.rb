@@ -20,13 +20,10 @@ module StructPacking
       alias :from_data :unpack
 
       private
-      
+
       def set_values_from_byte_to_object(bytes, obj)
         
-        types =  internal_byte_format.values
-        template = Util.types_to_template( types )
-        values = bytes.unpack(template)
-
+        values = bytes.unpack( pack_template )
         value_fields = internal_byte_format.map do |name, format|
           if format =~ /.*\[\w*(\d+)\w*\]\w*/
             [name, [0..$1.to_i].to_a.collect { values.shift } ]

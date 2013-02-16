@@ -12,19 +12,16 @@ module StructPacking
     public
     
     def pack()
-      values = internal_byte_format.keys.collect do |k|
+      values = field_names.collect do |n|
         begin
-          instance_eval { send(k) }
+          instance_eval { send(n) }
         rescue NoMethodError
           0
         end
       end
       values.flatten!
 
-      types =  internal_byte_format.values
-      template = Util.types_to_template( types )
-
-      values.pack( template )
+      values.pack( pack_template )
     end
       
   end

@@ -20,6 +20,18 @@ module StructPacking
     def internal_byte_format
       self.class.internal_byte_format
     end
+
+    def field_names
+      self.class.field_names
+    end
+
+    def field_types
+      self.class.field_types
+    end
+
+    def pack_template
+      self.class.pack_template
+    end
     
     module ClassMethods
       
@@ -50,6 +62,19 @@ module StructPacking
 
         true
       end
+
+      def field_names
+        internal_byte_format.keys
+      end
+
+      def field_types
+        internal_byte_format.values
+      end
+
+      def pack_template
+        Util.types_to_template( field_types )
+      end
+
     end
   end
   
