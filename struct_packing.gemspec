@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.files = [
     ".document",
     "C-like_structure_declaration.rdoc",
+    "Gemfile",
     "History.txt",
     "LICENSE.txt",
     "Manifest.txt",
@@ -49,7 +50,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.25"
-  s.summary = "TODO: one-line summary of your gem"
+  s.summary = "* Read/Write ruby object to byte array with C-like struct declarations."
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
