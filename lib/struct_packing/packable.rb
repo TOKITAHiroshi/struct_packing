@@ -14,7 +14,7 @@ module StructPacking
     def pack()
       bytes = ""
         
-      byte_format.each do |name, param|
+      internal_byte_format.each do |name, param|
         begin
           value = instance_eval("#{name.to_s}()")
         rescue NoMethodError => nme

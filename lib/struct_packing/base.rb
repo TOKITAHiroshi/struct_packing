@@ -17,8 +17,8 @@ module StructPacking
     # Get structure format string used in packing this object.
     #
     # This method work as just wrapper to same name class-method. 
-    def byte_format
-      self.class.byte_format
+    def internal_byte_format
+      self.class.internal_byte_format
     end
     
     module ClassMethods
@@ -27,10 +27,10 @@ module StructPacking
 
       def append_define(name, type)
         count = 0
-        byte_format.values.collect {|v| count += v[:size] }
+        internal_byte_format.values.collect {|v| count += v[:size] }
         size = Util.size_of( type )
         
-        byte_format[name] = {:type=>type, :start=>count, :size=>size}
+        internal_byte_format[name] = {:type=>type, :start=>count, :size=>size}
       end
       
       def parse_format_text(text)
@@ -59,7 +59,7 @@ module StructPacking
       public
 
       # Get structure format string used in packing object of this class.
-      def byte_format
+      def internal_byte_format
         check_vardef # TODO Find more good way!
         
         self.class_variable_get(:@@byte_format)

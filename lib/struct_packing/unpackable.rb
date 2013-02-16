@@ -23,7 +23,7 @@ module StructPacking
       
       def unpack_to_hash(bytes)
         data = {}
-        byte_format.each do |name, param|
+        internal_byte_format.each do |name, param|
           databytes = bytes[param[:start],param[:size]]
           type = param[:type]
             
