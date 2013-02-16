@@ -56,7 +56,7 @@ module StructPacking
       def internal_format
         check_vardef # TODO Find more good way!
         
-        Util.parse_format_text( self.class_variable_get(:@@struct_internal_format) )
+        Util.internal_format_from( self.class_variable_get(:@@struct_internal_format) )
       end
       
       # Set structure format for this class by string.
@@ -80,7 +80,9 @@ module StructPacking
 
       # Get Ruby's pack tenplate string for this class.
       def pack_template
-        Util.types_to_template( field_types )
+        check_vardef # TODO Find more good way!
+
+        Util.pack_template_from( self.class_variable_get(:@@struct_internal_format) )
       end
 
     end

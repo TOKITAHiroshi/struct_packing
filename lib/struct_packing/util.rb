@@ -2,9 +2,11 @@
 module StructPacking
 
   public
+
+  # internal 
   class Util
 
-    INT_LENGTH = [1].pack("i").length
+    private
 
     def self.parse_ctype_decl(decl)
       decl =~ /^\s*(unsigned|signed)?\s*(ascii|utf8|byte|char|short|(?:u?int)(?:8|16|32|64)?|(?:big|little)?(?:16|32)|(?:big|little)?\s*(?:float|double)?|long(?:\s*long))\s*(?:\[\s*(\d+)\s*\])?\s*$/
@@ -79,12 +81,21 @@ module StructPacking
         'E'
       end      
     end
-    
+
     def self.types_to_template(types)
       types.collect {|t| parse_ctype_decl(t)}.join
     end
 
-    def self.parse_format_text(text)
+    public
+    # Parse declaration string into pack template.
+    def self.pack_template_from(text)
+      internal = internal_format_from(text)
+      types_to_template(internal.values)
+    end
+
+    # Parse declaration string into internal format.
+    # Internal format is {:name=>"type", ...}
+    def self.internal_format_from(text)
       params = {}
       text.split(/[\n;]/).each do |line|
         line.gsub!(/^\s*/,'')
