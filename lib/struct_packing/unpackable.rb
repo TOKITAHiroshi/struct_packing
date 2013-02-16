@@ -21,27 +21,26 @@ module StructPacking
 
       private
       
-      def unpack_to_hash(bytes)
-        data = {}
-        internal_byte_format.each do |name, param|
-          databytes = bytes[param[:start],param[:size]]
-          type = param[:type]
-            
-          data[name] = Util.unpack(type,databytes)
-        end
-        data
-      end
-      
       def set_values_from_byte_to_object(bytes, obj)
-        h = unpack_to_hash(bytes)
         
-        h.keys.each do |name|
+        types =  internal_byte_format.values
+        template = Util.types_to_template( types )
+        values = bytes.unpack(template)
+
+        value_fields = internal_byte_format.map do |name, format|
+          if format =~ /.*\[\w*(\d+)\w*\]\w*/
+            [name, [0..$1.to_i].to_a.collect { values.shift } ]
+          else
+            [name, values.shift]
+          end
+        end
+
+        value_fields.each do |tuple|
           begin
-            if not h[name] == nil
-              obj.instance_eval("self.#{name} = #{h[name]}")
-            end
-          rescue NoMethodError => nme
-            ;
+            obj.instance_eval {
+              send("#{tuple[0]}=", tuple[1])
+            }
+          rescue NoMethodError
           end
         end
         obj

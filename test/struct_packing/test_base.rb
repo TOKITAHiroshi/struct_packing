@@ -23,7 +23,7 @@ class TestBase < Test::Unit::TestCase
   end
   
   def test_single_int_internal_format
-    assert_equal({:type=>"int", :start=>0, :size=>4} , SingleIntStruct.internal_byte_format[:hoge])
+    assert_equal("int" , SingleIntStruct.internal_byte_format[:hoge])
   end
 
   class MultiFieldStruct
@@ -32,8 +32,8 @@ class TestBase < Test::Unit::TestCase
   end
 
   def test_multi_field_internal_format
-    assert_equal({:type=>"int", :start=>0, :size=>4} , MultiFieldStruct.internal_byte_format[:fuga])
-    assert_equal({:type=>"char", :start=>4, :size=>1} , MultiFieldStruct.internal_byte_format[:piyo])
+    assert_equal("int" , MultiFieldStruct.internal_byte_format[:fuga])
+    assert_equal("char" , MultiFieldStruct.internal_byte_format[:piyo])
   end
 
 end

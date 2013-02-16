@@ -25,14 +25,6 @@ module StructPacking
       
       private
 
-      def append_define(name, type)
-        count = 0
-        internal_byte_format.values.collect {|v| count += v[:size] }
-        size = Util.size_of( type )
-        
-        internal_byte_format[name] = {:type=>type, :start=>count, :size=>size}
-      end
-      
       def parse_format_text(text)
         params = {}
         text.split(/[\n;]/).each do |line|
@@ -43,7 +35,7 @@ module StructPacking
           type = line[0..idx-1]
           name = line[idx+1..line.length]
           
-          params[name.to_sym] = type
+          params[name.to_sym] = {:type=>type}
         end
         
         params
@@ -69,14 +61,11 @@ module StructPacking
       def byte_format=(arg)
         check_vardef
         
-        if arg.is_a?(String)
-          params = parse_format_text(arg)
-        else
-          params = arg   
-        end
-        
+        params = parse_format_text(arg)
+       
+        # ???
         params.keys.each do |f|
-          append_define(f, params[f])
+          internal_byte_format[f] = params[f]
         end
 
         true

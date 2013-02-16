@@ -12,17 +12,19 @@ module StructPacking
     public
     
     def pack()
-      bytes = ""
-        
-      internal_byte_format.each do |name, param|
+      values = internal_byte_format.keys.collect do |k|
         begin
-          value = instance_eval("#{name.to_s}()")
-        rescue NoMethodError => nme
-          value = 0
+          instance_eval { send(k) }
+        rescue NoMethodError
+          0
         end
-        bytes += Util.pack(param[:type], value)
       end
-      bytes
+      values.flatten!
+
+      types =  internal_byte_format.values
+      template = Util.types_to_template( types )
+
+      values.pack( template )
     end
       
   end
