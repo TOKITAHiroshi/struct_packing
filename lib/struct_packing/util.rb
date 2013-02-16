@@ -3,17 +3,17 @@ module StructPacking
 
   public
 
-  # internal 
+  # internal C-like_structure_declaration
   class Util
 
     private
 
     def self.parse_ctype_decl(decl)
-      decl =~ /^\s*(unsigned|signed)?\s*(ascii|utf8|byte|char|short|(?:u?int)(?:8|16|32|64)?|(?:big|little)?(?:16|32)|(?:big|little)?\s*(?:float|double)?|long(?:\s*long))\s*(?:\[\s*(\d+)\s*\])?\s*$/
+      decl =~ /^\s*(unsigned|signed)?\s*(ascii|utf8|byte|char|short|(?:u?int)(?:(?:8|16|32|64)_t)?|(?:big|little)?(?:16|32)|(?:big|little)?\s*(?:float|double)?|long(?:\s*long))\s*(?:\[\s*(\d+)\s*\])?\s*$/
 
       sign = !("unsigned" == $1)
       template = template_of(sign, $2)
-      if $3 != nil
+      if $3 != nil and $3 == "1"
         template += $3
       end
       template
@@ -29,31 +29,31 @@ module StructPacking
         'C'
       when "char"
         'c'
-      when "int8"
+      when "int8_t"
         sign ? 'c' : 'C'
       when "short"
         's'
-      when "int16"
+      when "int16_t"
         sign ? 's' : 'S'
       when "int"
         sign ? 'i' : 'I'
-      when "int32"
+      when "int32_t"
         sign ? 'l' : 'L'
       when "long"
         sign ? 'l' : 'L'
       when /long(\s*long)/
         sign ? 'q' : 'Q'
-      when "int64"
+      when "int64_t"
         sign ? 'q' : 'Q'
-      when "uint8"
+      when "uint8_t"
         'C'
-      when "uint16"
+      when "uint16_t"
         'S'
       when "uint"
         'I'
-      when "uint32"
+      when "uint32_t"
         'L'
-      when "uint64"
+      when "uint64_t"
         'Q'
       when "big16"
         'n'

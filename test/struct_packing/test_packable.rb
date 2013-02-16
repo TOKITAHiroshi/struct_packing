@@ -13,7 +13,7 @@ class TestPackable < Test::Unit::TestCase
   
   class ClsIntNoAttr
     include TEST_MOD
-    self.byte_format = "uint32 packtestint;"
+    self.byte_format = "uint32_t packtestint;"
   end
   
   def test_pack_undefined_field_int
@@ -72,7 +72,7 @@ class TestPackable < Test::Unit::TestCase
 
   class OStructTestClass < OpenStruct
     include TEST_MOD
-    self.byte_format = "uint32 hoge; int fuga; byte piyo[1]"
+    self.byte_format = "uint32_t hoge; int fuga; byte piyo[1]"
   end
 
   def test_pack_with_ostruct
