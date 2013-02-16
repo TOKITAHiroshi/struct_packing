@@ -73,7 +73,7 @@ class TestUnpackable < Test::Unit::TestCase
 
   class OStructTestClass < OpenStruct
     include TEST_MOD
-    self.byte_format = "uint32 hoge; int fuga; byte[1] piyo"
+    self.byte_format = "uint32 hoge; int fuga; byte piyo[1]"
   end
 
   def test_from_data_with_ostruct

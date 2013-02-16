@@ -93,7 +93,12 @@ module StructPacking
         idx = line.rindex(' ')
         type = line[0..idx-1]
         name = line[idx+1..line.length]
-        
+
+        if name =~ /(.*)\[\w*(\d+)\w*\]\w*/
+          type += "[#{$2}]"
+          name = $1
+        end
+ 
         params[name.to_sym] = type
       end
       
