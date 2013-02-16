@@ -84,5 +84,20 @@ module StructPacking
       types.collect {|t| parse_ctype_decl(t)}.join
     end
 
+    def self.parse_format_text(text)
+      params = {}
+      text.split(/[\n;]/).each do |line|
+        line.gsub!(/^\s*/,'')
+        line.gsub!(/\s*$/,'')
+
+        idx = line.rindex(' ')
+        type = line[0..idx-1]
+        name = line[idx+1..line.length]
+        
+        params[name.to_sym] = type
+      end
+      
+      params
+    end
   end
 end

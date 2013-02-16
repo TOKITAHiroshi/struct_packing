@@ -25,23 +25,6 @@ module StructPacking
       
       private
 
-      def parse_format_text(text)
-        params = {}
-        text.split(/[\n;]/).each do |line|
-          line.gsub!(/^\s*/,'')
-          line.gsub!(/\s*$/,'')
-  
-          idx = line.rindex(' ')
-          type = line[0..idx-1]
-          name = line[idx+1..line.length]
-          
-          params[name.to_sym] = {:type=>type}
-        end
-        
-        params
-      end
-      
-      
       def check_vardef
         if not self.class_variable_defined?(:@@byte_format)
           class_eval("@@byte_format = {}")
@@ -61,12 +44,9 @@ module StructPacking
       def byte_format=(arg)
         check_vardef
         
-        params = parse_format_text(arg)
+        type_and_name = Util.parse_format_text(arg)
        
-        # ???
-        params.keys.each do |f|
-          internal_byte_format[f] = params[f]
-        end
+        self.class_variable_set(:@@byte_format, type_and_name)
 
         true
       end
