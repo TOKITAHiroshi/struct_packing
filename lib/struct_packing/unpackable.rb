@@ -42,18 +42,11 @@ module StructPacking
       def set_values_from_byte_to_object(bytes, obj)
         
         values = bytes.unpack( pack_template )
-        value_fields = internal_byte_format.map do |name, format|
-          if format =~ /.*\[\w*(\d+)\w*\]\w*/
-            [name, [0..$1.to_i].to_a.collect { values.shift } ]
-          else
-            [name, values.shift]
-          end
-        end
 
-        value_fields.each do |tuple|
+        field_names.zip(gather_array_field(values) ).each do |name,value|
           begin
             obj.instance_eval {
-              send("#{tuple[0]}=", tuple[1])
+              send("#{name}=", value)
             }
           rescue NoMethodError
           end
@@ -61,6 +54,15 @@ module StructPacking
         obj
       end
       
+      def gather_array_field(values)
+        field_types.collect do |name|
+          if name =~ /.*\[\w*(\d+)\w*\]\w*/
+            [0..$1.to_i].to_a.collect { values.shift }
+          else
+            values.shift
+          end
+        end
+      end
     end
     
     public
