@@ -17,9 +17,9 @@ Jeweler::Tasks.new do |gem|
   gem.name = "struct_packing"
   gem.homepage = "http://github.com/TOKITAHiroshi/struct_packing"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
-  gem.email = "tokita.hiroshi+github@gmail.com"
+  gem.summary = %Q{* Read/Write ruby object to byte array with C-like struct declarations.}
+  gem.description = %Q{* Read/Write ruby object to byte array with C-like struct declarations.}
+  gem.email = ["tokita.hiroshi@gmail.com"]
   gem.authors = ["TOKITA Hiroshi"]
   # dependencies defined in Gemfile
 end
