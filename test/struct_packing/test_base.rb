@@ -11,9 +11,9 @@ class TestBase < Test::Unit::TestCase
     include StructPacking::Base
   end
   
-  def test_null_internal_byte_format
+  def test_null_internal_format
     obj = ClassIncludeOnly.new
-    assert_equal({}, obj.internal_byte_format())
+    assert_equal({}, obj.internal_format())
   end
   
 
@@ -23,7 +23,7 @@ class TestBase < Test::Unit::TestCase
   end
   
   def test_single_int_internal_format
-    assert_equal("int" , SingleIntStruct.internal_byte_format[:hoge])
+    assert_equal("int" , SingleIntStruct.internal_format[:hoge])
   end
 
   class MultiFieldStruct
@@ -32,8 +32,17 @@ class TestBase < Test::Unit::TestCase
   end
 
   def test_multi_field_internal_format
-    assert_equal("int" , MultiFieldStruct.internal_byte_format[:fuga])
-    assert_equal("char" , MultiFieldStruct.internal_byte_format[:piyo])
+    assert_equal("int" , MultiFieldStruct.internal_format[:fuga])
+    assert_equal("char" , MultiFieldStruct.internal_format[:piyo])
   end
 
+=begin
+  def test_internal_format_not_modifiable
+    assert_equal(4, (SingleIntStruct.internal_format[:hoge])[:size])
+    (SingleIntStruct.internal_format[:hoge])[:size] = 8
+    assert_equal(8, (SingleIntStruct.internal_format[:hoge])[:size])
+    assert_equal({:type=>"int", :start=>0, :size=>4} , SingleIntStruct.internal_format[:hoge])
+  end
+=end 
+  
 end

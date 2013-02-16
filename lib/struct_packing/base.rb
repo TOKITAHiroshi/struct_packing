@@ -17,8 +17,8 @@ module StructPacking
     # Get structure format string used in packing this object.
     #
     # This method work as just wrapper to same name class-method. 
-    def internal_byte_format
-      self.class.internal_byte_format
+    def internal_format
+      self.class.internal_format
     end
 
     # Get field name list of this class.
@@ -43,41 +43,39 @@ module StructPacking
       
       private
 
-      # TODO temporary initializer for @@byte_format
+      # TODO temporary initializer for @@struct_internal_format
       def check_vardef
-        if not self.class_variable_defined?(:@@byte_format)
-          class_eval("@@byte_format = {}")
+        if not self.class_variable_defined?(:@@struct_internal_format)
+          class_eval("@@struct_internal_format = ''")
         end
       end
       
       public
 
       # Get internal structure format used to pack a object of this class.
-      def internal_byte_format
+      def internal_format
         check_vardef # TODO Find more good way!
         
-        self.class_variable_get(:@@byte_format)
+        Util.parse_format_text( self.class_variable_get(:@@struct_internal_format) )
       end
       
       # Set structure format for this class by string.
-      def byte_format=(arg)
-        check_vardef
+      def byte_format=(text)
+        check_vardef # TODO Find more good way!
         
-        type_and_name = Util.parse_format_text(arg)
-       
-        self.class_variable_set(:@@byte_format, type_and_name)
+        self.class_variable_set(:@@struct_internal_format, text)
 
         true
       end
 
       # Get field name list of this class.
       def field_names
-        internal_byte_format.keys
+        internal_format.keys
       end
 
       # Get field type list of this class.
       def field_types
-        internal_byte_format.values
+        internal_format.values
       end
 
       # Get Ruby's pack tenplate string for this class.
