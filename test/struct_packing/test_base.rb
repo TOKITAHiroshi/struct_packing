@@ -35,6 +35,17 @@ class TestBase < Test::Unit::TestCase
     assert_equal("int" , MultiFieldStruct.internal_format[:fuga])
     assert_equal("char" , MultiFieldStruct.internal_format[:piyo])
   end
+  
+  def test_class_macro
+    eval <<-EOF
+      class TestClassMacro
+        include StructPacking::Base
+        define_struct "int foo;"
+      end
+    EOF
+    
+    assert_equal({:foo=>"int"}, TestClassMacro.internal_format)
+  end
 
   class NotModifiableFormat
     include StructPacking::Base

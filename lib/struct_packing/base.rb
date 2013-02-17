@@ -68,6 +68,8 @@ module StructPacking
         true
       end
 
+      alias :define_struct :byte_format=
+      
       # Get field name list of this class.
       def field_names
         internal_format.keys
