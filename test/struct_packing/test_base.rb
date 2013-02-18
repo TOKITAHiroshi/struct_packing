@@ -36,13 +36,15 @@ class TestBase < Test::Unit::TestCase
     assert_equal("char" , MultiFieldStruct.internal_format[:piyo])
   end
 
-=begin
-  def test_internal_format_not_modifiable
-    assert_equal(4, (SingleIntStruct.internal_format[:hoge])[:size])
-    (SingleIntStruct.internal_format[:hoge])[:size] = 8
-    assert_equal(8, (SingleIntStruct.internal_format[:hoge])[:size])
-    assert_equal({:type=>"int", :start=>0, :size=>4} , SingleIntStruct.internal_format[:hoge])
+  class NotModifiableFormat
+    include StructPacking::Base
+    self.byte_format = "int xxx;"
   end
-=end 
+  
+  def test_internal_format_not_modifiable
+    assert_equal("int", NotModifiableFormat.internal_format[:xxx])
+    SingleIntStruct.internal_format[:xxx] = "byte"
+    assert_equal("int", (NotModifiableFormat.internal_format[:xxx]))
+  end
   
 end
