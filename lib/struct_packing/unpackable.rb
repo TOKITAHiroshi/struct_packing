@@ -12,7 +12,7 @@ module StructPacking
     private
 
     def self.included(base)
-      base.send("include", Base)
+      base.send(:include, Base)
       base.extend ClassMethods
     end
   

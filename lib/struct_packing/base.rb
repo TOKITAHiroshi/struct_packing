@@ -41,35 +41,24 @@ module StructPacking
     # Automatically extend on including StructPacking::Base module.
     module ClassMethods
       
-      private
-
-      # TODO temporary initializer for @@struct_internal_format
-      def check_vardef
-        if not self.class_variable_defined?(:@@struct_internal_format)
-          class_eval("@@struct_internal_format = ''")
-        end
-      end
-      
       public
 
       # Get internal structure format used to pack a object of this class.
       def internal_format
-        check_vardef # TODO Find more good way!
-        
-        Util.internal_format_from( self.class_variable_get(:@@struct_internal_format) )
+        if class_variable_defined?(:@@struct_internal_format)
+          Util.internal_format_from( self.class_variable_get(:@@struct_internal_format) )
+        else
+          {}
+        end
       end
       
       # Set structure format for this class by string.
       def byte_format=(text)
-        check_vardef # TODO Find more good way!
-        
         self.class_variable_set(:@@struct_internal_format, text)
 
         true
       end
 
-      alias :define_struct :byte_format=
-      
       # Get field name list of this class.
       def field_names
         internal_format.keys
@@ -82,11 +71,15 @@ module StructPacking
 
       # Get Ruby's pack template string for this class.
       def pack_template
-        check_vardef # TODO Find more good way!
-
-        Util.pack_template_from( self.class_variable_get(:@@struct_internal_format) )
+        if class_variable_defined?(:@@struct_internal_format)
+          Util.pack_template_from( self.class_variable_get(:@@struct_internal_format) )
+        else
+          ""
+        end
       end
 
+      alias :define_struct :byte_format=
+      
     end
   end
   

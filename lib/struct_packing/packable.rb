@@ -23,7 +23,7 @@ module StructPacking
     include Base
     
     def self.included(base)
-      base.send("include", Base)
+      base.send(:include, Base)
     end
     
     public
