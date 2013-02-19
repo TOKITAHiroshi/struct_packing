@@ -9,14 +9,22 @@ module StructPacking
     private
 
     def self.parse_ctype_decl(decl)
-      decl =~ /^\s*(unsigned|signed)?\s*(ascii|utf8|byte|char|short|(?:u?int)(?:(?:8|16|32|64)_t)?|(?:big|little)?(?:16|32)|(?:big|little)?\s*(?:float|double)?|long(?:\s*long))\s*(?:\[\s*(\d+)\s*\])?\s*$/
+      decl =~ /^\s*(unsigned|signed)?\s*(ascii|utf8|byte|char|short|(?:u?int)(?:(?:8|16|32|64)_t)?|(?:big|little)?(?:16|32)|(?:big|little)?\s*(?:float|double)?|long(?:\s*long))\s*([\s\*]*)\s*(?:\[\s*(\d+)\s*\])?\s*$/
 
-      sign = !("unsigned" == $1)
-      template = template_of(sign, $2)
-      if $3 != nil and $3 == "1"
-        template += $3
+
+      sign = !("unsigned" == $1) #sign modifier
+      
+      if $3 != nil and $3 != "" #pointer operator
+        template = 'P'
+      else
+        template = template_of(sign, $2)
       end
-      template
+
+      if $4 != nil and $4 != "1"
+        template += $4
+      else
+        template
+      end
     end
 
     def self.template_of(sign, type)
