@@ -7,23 +7,42 @@ module StructPacking
   class Util
 
     private
-
-    def self.parse_ctype_decl(decl)
-      decl =~ /^\s*(unsigned|signed)?\s*(ascii|utf8|byte|char|short|(?:u?int)(?:(?:8|16|32|64)_t)?|(?:big|little)?(?:16|32)|(?:big|little)?\s*(?:float|double)?|long(?:\s*long))\s*([\s\*]*)\s*(?:\[\s*(\d+)\s*\])?\s*$/
-
-
-      sign = !("unsigned" == $1) #sign modifier
+    
+    def self.struct_template(type, arraylen, mod=nil)
+      type =~ /struct\s*(\w*)\s*/
       
-      if $3 != nil and $3 != "" #pointer operator
-        template = 'P'
+      if mod == nil 
+        ctx = Kernel
       else
-        template = template_of(sign, $2)
+        ctx = mod
       end
 
-      if $4 != nil and $4 != "1"
-        template += $4
+      if arraylen != ""
+        ctx.const_get($1).pack_template * arraylen.to_i
       else
-        template
+        ctx.const_get($1).pack_template
+      end
+      
+    end
+
+    def self.parse_ctype_decl(decl, mod=nil)
+      decl =~ /^\s*(unsigned|signed)?\s*(ascii|utf8|byte|char|short|(?:u?int)(?:(?:8|16|32|64)_t)?|(?:big|little)?(?:16|32)|(?:big|little)?\s*(?:float|double)?|long(?:\s*long)|struct\s*\w*)\s*([\s\*]*)\s*(?:\[\s*(\d+)\s*\])?\s*$/
+
+      sign = !("unsigned" == $1) #sign modifier
+      type = $2
+      ptr = $3
+      arraylen = $4
+
+      if arraylen == nil or arraylen == "1"
+        arraylen = ""
+      end
+      
+      if ptr != nil and ptr != "" #pointer operator
+        'P' + arraylen
+      elsif "struct" == type[0..5]
+        struct_template(type, arraylen, mod)
+      else
+        template_of(sign, type) + arraylen
       end
     end
 
@@ -90,15 +109,15 @@ module StructPacking
       end      
     end
 
-    def self.types_to_template(types)
-      types.collect {|t| parse_ctype_decl(t)}.join
+    def self.types_to_template(types, mod=nil)
+      types.collect {|t| parse_ctype_decl(t,mod)}.join
     end
 
     public
     # Parse declaration string into pack template.
-    def self.pack_template_from(text)
+    def self.pack_template_from(text,mod=nil)
       internal = internal_format_from(text)
-      types_to_template(internal.values)
+      types_to_template(internal.values,mod)
     end
 
     # Parse declaration string into internal format.

@@ -2,6 +2,12 @@ require File.dirname(__FILE__) + '/../test_helper.rb'
 
 require 'ostruct'
 
+
+class Hoge
+  include StructPacking::Packable
+  define_struct "int ho; char ge;"
+end
+
 class TestUtil < Test::Unit::TestCase
 
   def setup
@@ -24,6 +30,30 @@ class TestUtil < Test::Unit::TestCase
     tpl = StructPacking::Util.types_to_template(["int*", "char*[4]"])
 
     assert_equal("PP4", tpl)
+  end
+  
+  def test_struct
+    tpl = StructPacking::Util.types_to_template(["struct Hoge"])
+
+    assert_equal("ic", tpl)
+  end
+  
+
+  def test_struct_array
+    tpl = StructPacking::Util.types_to_template(["struct Hoge[4]"])
+
+    assert_equal("icicicic", tpl)
+  end
+  
+  class Fuga
+    include StructPacking::Packable
+    define_struct "int fu; char ga;"
+  end
+  
+  def test_innel_module
+    tpl = StructPacking::Util.types_to_template(["struct Fuga[4]"], Module.nesting.last)
+
+    assert_equal("icicicic", tpl)
   end
   
   
