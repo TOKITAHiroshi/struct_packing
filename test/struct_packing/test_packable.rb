@@ -88,4 +88,46 @@ class TestPackable < Test::Unit::TestCase
     assert_equal([1, 0, 0, 0, 2, 0, 0, 0, 8].pack("C*"), ba)
   end
 
+  
+  class ClsNested < OpenStruct
+    include TEST_MOD
+    self.byte_format = "int ho; char ge;"
+  end
+  
+  class ClsNesting < OpenStruct
+    include TEST_MOD
+    self.byte_format = "struct ClsNested nst;"
+  end
+
+  def test_struct
+    obj = ClsNesting.new
+    nst = ClsNested.new
+    obj.nst = nst
+    obj.nst.ho = 1
+    obj.nst.ge = 10
+
+    assert_equal([1,0,0,0, 10].pack("C*"), obj.pack )
+  end
+  
+  class ClsArray < OpenStruct
+    include TEST_MOD
+    self.byte_format = "struct ClsNested ary[2];"
+  end
+  
+  def test_struct_array
+    obj = ClsArray.new
+
+    nst1 = ClsNested.new
+    nst1.ho = 1
+    nst1.ge = 10
+    nst2 = ClsNested.new
+    nst2.ho = 2
+    nst2.ge = 20
+    obj.ary = [nst1, nst2]
+    
+    assert_equal([1,0,0,0,10,2,0,0,0,20].pack("C*"), obj.pack )
+  end
+  
+  
+  
 end

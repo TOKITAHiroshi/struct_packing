@@ -58,4 +58,19 @@ class TestBase < Test::Unit::TestCase
     assert_equal("int", (NotModifiableFormat.internal_format[:xxx]))
   end
   
+  class InnerModuleClass
+    include StructPacking::Base
+    self.byte_format = "int inner; char mod;"
+  end
+  
+  class InnerModuleTest
+    include StructPacking::Base
+    self.byte_format =  "struct InnerModuleClass imc;"
+  end
+  
+  def test_inner_struct_class
+    assert_equal("ic", InnerModuleTest.pack_template)
+  end
+  
+  
 end

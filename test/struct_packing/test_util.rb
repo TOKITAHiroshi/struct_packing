@@ -45,13 +45,13 @@ class TestUtil < Test::Unit::TestCase
     assert_equal("icicicic", tpl)
   end
   
-  class Fuga
+  class TestInnerClass
     include StructPacking::Packable
     define_struct "int fu; char ga;"
   end
   
-  def test_innel_module
-    tpl = StructPacking::Util.types_to_template(["struct Fuga[4]"], Module.nesting.last)
+  def test_inner_module
+    tpl = StructPacking::Util.types_to_template(["struct TestInnerClass[4]"], self.class)
 
     assert_equal("icicicic", tpl)
   end

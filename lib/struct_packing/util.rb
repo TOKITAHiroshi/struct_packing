@@ -10,17 +10,11 @@ module StructPacking
     
     def self.struct_template(type, arraylen, mod=nil)
       type =~ /struct\s*(\w*)\s*/
-      
-      if mod == nil 
-        ctx = Kernel
-      else
-        ctx = mod
-      end
 
       if arraylen != ""
-        ctx.const_get($1).pack_template * arraylen.to_i
+        find_hier_mod(mod, $1).pack_template * arraylen.to_i
       else
-        ctx.const_get($1).pack_template
+        find_hier_mod(mod, $1).pack_template
       end
       
     end
@@ -113,6 +107,24 @@ module StructPacking
       types.collect {|t| parse_ctype_decl(t,mod)}.join
     end
 
+    
+    def self.find_hier_mod(context_mod, sym)
+      nesthier = context_mod.to_s.split("::")
+    
+      parent = Kernel
+      mods = nesthier.collect {|m| x = parent.const_get(m); parent = x; x }
+      mods.unshift Kernel
+    
+      finded = mods.reverse.collect {|m| m.const_defined?(sym) ? m.const_get(sym) : nil }
+      targetmod = finded.select {|f| f != nil }.first
+    
+      if targetmod == nil
+        raise NameError
+      end
+      targetmod
+    end
+
+    
     public
     # Parse declaration string into pack template.
     def self.pack_template_from(text,mod=nil)

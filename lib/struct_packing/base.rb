@@ -73,7 +73,7 @@ module StructPacking
       # Get Ruby's pack template string for this class.
       def pack_template
         if class_variable_defined?(:@@struct_internal_format)
-          Util.pack_template_from( self.class_variable_get(:@@struct_internal_format), Module.nesting.last )
+          Util.pack_template_from( self.class_variable_get(:@@struct_internal_format), self )
         else
           ""
         end

@@ -26,22 +26,40 @@ module StructPacking
       base.send(:include, Base)
     end
     
+    def value_or_zero(&block)
+      begin
+        instance_eval &block
+      rescue
+        0
+      end
+    end
+    
     public
+    
+    def struct_values
+      internal_format.collect do |name, type|
+        if type =~ /^struct\s*\w*\s*(?:\s*\[(\d+)\s*\])?\s*$/
+          arynum = $1
+          if $1 == nil
+            value_or_zero { send(name).struct_values }
+          else
+            (0..(arynum.to_i-1)).each.collect do |i|
+              value_or_zero { send(name)[i].struct_values }
+            end
+          end
+        else
+          value_or_zero { send(name) }
+        end
+      end
+    end
 
     # Pack this object to byte array.
     #
     # If attribute defined in byte_format, 
     # but object has no attr_getter, treat as the attribute is zero.
     def pack()
-      values = field_names.collect do |n|
-        begin
-          instance_eval { send(n) }
-        rescue NoMethodError
-          0
-        end
-      end
+      values = struct_values
       values.flatten!
-
       values.pack( pack_template )
     end
       
