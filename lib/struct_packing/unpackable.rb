@@ -37,12 +37,23 @@ module StructPacking
       
       alias :from_data :unpack
 
+      protected
+      
+      
+      def from_values(values)
+        obj = self.new
+        set_values_from_values_to_object(values, obj)
+      end
+      
       private
 
       def set_values_from_byte_to_object(bytes, obj)
-        
         values = bytes.unpack( pack_template )
-
+        set_values_from_values_to_object(values, obj)
+      end
+      
+      def set_values_from_values_to_object(values, obj)
+        
         field_names.zip(gather_array_field(values) ).each do |name,value|
           begin
             obj.instance_eval {
@@ -54,15 +65,6 @@ module StructPacking
         obj
       end
       
-      def gather_array_field(values)
-        field_types.collect do |name|
-          if name =~ /.*\[\w*(\d+)\w*\]\w*/
-            [0..$1.to_i].to_a.collect { values.shift }
-          else
-            values.shift
-          end
-        end
-      end
     end
     
     public

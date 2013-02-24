@@ -123,7 +123,7 @@ module StructPacking
       end
       targetmod
     end
-
+  
     
     public
     # Parse declaration string into pack template.

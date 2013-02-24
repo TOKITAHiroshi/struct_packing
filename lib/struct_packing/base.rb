@@ -52,6 +52,61 @@ module StructPacking
           {}
         end
       end
+  
+      def num_of_value
+        
+        nums = internal_format.collect do |name, type|
+          if type =~ /^struct\s*(\w*)\s*(?:\s*\[(\d+)\s*\])?\s*$/
+            struct_name = $1
+            arylen = $2
+            cls = Util.find_hier_mod(self, struct_name)
+            
+            if arylen == nil
+              cls.num_of_value
+            else
+              cls.num_of_value * arylen.to_i
+            end
+          else
+            1
+          end
+        end
+        
+        nums.inject(0) do |sum, num|
+          sum + num
+        end
+            
+      end
+      
+
+      def gather_array_field(value_array)
+        values = value_array.dup
+        
+        internal_format.collect do |name, type|
+
+          if type =~ /^struct\s*(\w*)\s*(?:\s*\[(\d+)\s*\])?\s*$/
+            struct_name = $1
+            arylen = $2
+            cls = Util.find_hier_mod(self, struct_name)
+            if arylen == nil
+              obj = cls.from_values( values[0, cls.num_of_value] )
+              values = values[cls.num_of_value, values.length]
+            else
+              obj = []
+              
+              arylen.to_i.times do 
+                obj.push( cls.from_values( values[0, cls.num_of_value] ) )
+                values = values[cls.num_of_value, values.length]
+              end
+            end
+            
+            obj
+          elsif type =~ /.*\[\w*(\d+)\w*\]\w*/
+            [0..$1.to_i].to_a.collect { values.shift }
+          else
+            values.shift
+          end
+        end
+      end
       
       # Set structure format for this class by string.
       def byte_format=(text)

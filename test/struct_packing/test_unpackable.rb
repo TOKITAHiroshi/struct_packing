@@ -85,5 +85,38 @@ class TestUnpackable < Test::Unit::TestCase
     assert_equal(2, ud.fuga)
     assert_equal([8], ud.piyo)
   end
+  
+  class ClsNested < OpenStruct
+    include TEST_MOD
+    self.byte_format = "int ho; char ge;"
+  end
+  
+  class ClsNesting < OpenStruct
+    include TEST_MOD
+    self.byte_format = "struct ClsNested nst;"
+  end
 
+  def test_struct
+    obj = ClsNesting.from_data([1,0,0,0, 10].pack("C*"))
+    assert_equal(1, obj.nst.ho)
+    assert_equal(10, obj.nst.ge)
+  end
+  
+  class ClsArray < OpenStruct
+    include TEST_MOD
+    self.byte_format = "struct ClsNested ary[2];"
+  end
+  
+  def test_struct_array
+    obj = ClsArray.from_data([1,0,0,0,10,2,0,0,0,20].pack("C*"))
+      
+    assert_equal(1, obj.ary[0].ho)
+    assert_equal(10, obj.ary[0].ge)
+    assert_equal(2, obj.ary[1].ho)
+    assert_equal(20, obj.ary[1].ge)
+    
+  end
+  
+  
+  
 end
