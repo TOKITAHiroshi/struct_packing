@@ -109,7 +109,7 @@ class TestUnpackable < Test::Unit::TestCase
   
   def test_struct_array
     obj = ClsArray.from_data([1,0,0,0,10,2,0,0,0,20].pack("C*"))
-      
+
     assert_equal(1, obj.ary[0].ho)
     assert_equal(10, obj.ary[0].ge)
     assert_equal(2, obj.ary[1].ho)
@@ -117,6 +117,18 @@ class TestUnpackable < Test::Unit::TestCase
     
   end
   
-  
+  class HashMapped < Hash
+    include TEST_MOD
+    define_struct "int hashhoge; char hashfuga;"
+    hash_mapped_struct
+  end
+
+  def test_hash_struct
+    obj = HashMapped.from_data([1,0,0,0,2].pack("C*") )
+
+    
+    assert_equal(1, obj[:hashhoge])
+    assert_equal(2, obj[:hashfuga])
+  end
   
 end

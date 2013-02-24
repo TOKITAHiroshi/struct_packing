@@ -87,7 +87,6 @@ class TestPackable < Test::Unit::TestCase
     
     assert_equal([1, 0, 0, 0, 2, 0, 0, 0, 8].pack("C*"), ba)
   end
-
   
   class ClsNested < OpenStruct
     include TEST_MOD
@@ -128,6 +127,19 @@ class TestPackable < Test::Unit::TestCase
     assert_equal([1,0,0,0,10,2,0,0,0,20].pack("C*"), obj.pack )
   end
   
-  
+  class HashMapped < Hash
+    include TEST_MOD
+    define_struct "int hashhoge; char hashfuga;"
+    hash_mapped_struct
+  end
+
+  def test_hash_struct
+    obj = HashMapped.new
+
+    obj[:hashhoge] = 1
+    obj[:hashfuga] = 2
+    
+    assert_equal([1,0,0,0,2].pack("C*"), obj.pack)
+  end
   
 end

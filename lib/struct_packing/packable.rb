@@ -41,14 +41,14 @@ module StructPacking
         if type =~ /^struct\s*\w*\s*(?:\s*\[(\d+)\s*\])?\s*$/
           arynum = $1
           if $1 == nil
-            value_or_zero { send(name).struct_values }
+            value_or_zero { send(:selfclass).get_field_value(self, name).struct_values }
           else
             (0..(arynum.to_i-1)).each.collect do |i|
-              value_or_zero { send(name)[i].struct_values }
+              value_or_zero { send(:selfclass).get_field_value(self, name)[i].struct_values }
             end
           end
         else
-          value_or_zero { send(name) }
+          value_or_zero { send(:selfclass).get_field_value(self, name) }
         end
       end
     end

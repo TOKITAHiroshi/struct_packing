@@ -56,9 +56,7 @@ module StructPacking
         
         field_names.zip(gather_array_field(values) ).each do |name,value|
           begin
-            obj.instance_eval {
-              send("#{name}=", value)
-            }
+            obj.send(:selfclass).set_field_value(obj, name, value)
           rescue NoMethodError
           end
         end
