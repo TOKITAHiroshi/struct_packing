@@ -13,7 +13,7 @@ class TestBase < Test::Unit::TestCase
   
   def test_null_internal_format
     obj = ClassIncludeOnly.new
-    assert_equal({}, obj.internal_format())
+    assert_equal({}, obj.send(:internal_format) )
   end
   
 
@@ -23,7 +23,7 @@ class TestBase < Test::Unit::TestCase
   end
   
   def test_single_int_internal_format
-    assert_equal("int" , SingleIntStruct.internal_format[:hoge])
+    assert_equal("int" , SingleIntStruct.send(:internal_format)[:hoge])
   end
 
   class MultiFieldStruct
@@ -32,8 +32,8 @@ class TestBase < Test::Unit::TestCase
   end
 
   def test_multi_field_internal_format
-    assert_equal("int" , MultiFieldStruct.internal_format[:fuga])
-    assert_equal("char" , MultiFieldStruct.internal_format[:piyo])
+    assert_equal("int" , MultiFieldStruct.send(:internal_format)[:fuga])
+    assert_equal("char" , MultiFieldStruct.send(:internal_format)[:piyo])
   end
   
   def test_class_macro
@@ -44,7 +44,7 @@ class TestBase < Test::Unit::TestCase
       end
     EOF
     
-    assert_equal({:foo=>"int"}, TestClassMacro.internal_format)
+    assert_equal({:foo=>"int"}, TestClassMacro.send(:internal_format) )
   end
 
   class NotModifiableFormat
@@ -53,9 +53,9 @@ class TestBase < Test::Unit::TestCase
   end
   
   def test_internal_format_not_modifiable
-    assert_equal("int", NotModifiableFormat.internal_format[:xxx])
-    SingleIntStruct.internal_format[:xxx] = "byte"
-    assert_equal("int", (NotModifiableFormat.internal_format[:xxx]))
+    assert_equal("int", NotModifiableFormat.send(:internal_format)[:xxx])
+    SingleIntStruct.send(:internal_format)[:xxx] = "byte"
+    assert_equal("int", (NotModifiableFormat.send(:internal_format)[:xxx]))
   end
   
   class InnerModuleClass

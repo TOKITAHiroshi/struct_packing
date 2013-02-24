@@ -34,7 +34,7 @@ module StructPacking
       end
     end
     
-    public
+    protected
     
     def struct_values
       internal_format.collect do |name, type|
@@ -53,6 +53,8 @@ module StructPacking
       end
     end
 
+    public
+  
     # Pack this object to byte array.
     #
     # If attribute defined in byte_format, 

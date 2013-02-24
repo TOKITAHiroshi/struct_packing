@@ -11,16 +11,25 @@ module StructPacking
     def self.included(base)
       base.extend ClassMethods
     end
-  
-    public
+    
+    protected
+
+    def selfclass
+      if defined?(self.class.selfclass)
+        self.class.selfclass
+      else
+        eign = (class << self; self ; end)
+        eign.selfclass
+      end
+    end
     
     # Get structure format string used in packing this object.
     #
     # This method work as just wrapper to same name class-method. 
     def internal_format
-      self.class.internal_format
+      self.class.__send__(:internal_format)
     end
-
+    
     # Get field name list of this class.
     def field_names
       self.class.field_names
@@ -30,6 +39,8 @@ module StructPacking
     def field_types
       self.class.field_types
     end
+    
+    public
 
     # Get Ruby's pack template string for this class.
     def pack_template
@@ -41,7 +52,7 @@ module StructPacking
     # Automatically extend on including StructPacking::Base module.
     module ClassMethods
       
-      public
+      protected
 
       # Get internal structure format used to pack a object of this class.
       def internal_format
@@ -53,6 +64,8 @@ module StructPacking
         end
       end
   
+      protected
+      
       def num_of_value
         
         nums = internal_format.collect do |name, type|
@@ -108,6 +121,8 @@ module StructPacking
         end
       end
       
+      public
+      
       # Set structure format for this class by string.
       def byte_format=(text)
         self.class_variable_set(:@@struct_internal_format, text)
@@ -115,16 +130,22 @@ module StructPacking
         true
       end
 
+      protected
+
       # Get field name list of this class.
       def field_names
         internal_format.keys
       end
 
+      protected
+      
       # Get field type list of this class.
       def field_types
         internal_format.values
       end
 
+      public
+      
       # Get Ruby's pack template string for this class.
       def pack_template
         if class_variable_defined?(:@@struct_internal_format)
