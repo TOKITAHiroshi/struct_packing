@@ -22,6 +22,7 @@ class TestPackable < Test::Unit::TestCase
   end
 
   class ClsInt < ClsIntNoAttr
+    include TEST_MOD
     attr_accessor :packtestint
   end
 
@@ -42,6 +43,7 @@ class TestPackable < Test::Unit::TestCase
   end
 
   class ClsChar < ClsCharNoAttr
+    include TEST_MOD
     attr_accessor :packtestchar
   end
 
