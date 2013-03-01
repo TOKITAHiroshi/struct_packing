@@ -31,7 +31,7 @@ module StructPacking
       self.class.field_types
     end
 
-    # Get Ruby's pack tenplate string for this class.
+    # Get Ruby's pack template string for this class.
     def pack_template
       self.class.pack_template
     end
@@ -78,7 +78,7 @@ module StructPacking
         internal_format.values
       end
 
-      # Get Ruby's pack tenplate string for this class.
+      # Get Ruby's pack template string for this class.
       def pack_template
         check_vardef # TODO Find more good way!
 
