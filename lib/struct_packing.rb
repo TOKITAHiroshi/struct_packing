@@ -11,7 +11,7 @@ $:.unshift(File.dirname(__FILE__)) unless
 # and the class and instances can packing or unpacking by these methods.
 module StructPacking
   # Gem version.
-  VERSION = '0.0.1'
+  VERSION = '0.0.3'
 end
 
 require 'struct_packing/base'

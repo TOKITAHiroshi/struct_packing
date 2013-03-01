@@ -2,3 +2,17 @@
 
 * 1 major enhancement:
   * Initial release
+
+=== 0.0.2 2013-02-17
+
+* 3 major enhancement:
+  * Support array type.
+  * Use jeweler for gem build.
+  * A lot of BUG FIX.
+
+=== 0.0.2 2013-03-02
+
+* 2 major enhancement:
+  * Support struct.
+  * Support hash-style field access.
+  * Some BUG FIX.
