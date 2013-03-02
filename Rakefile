@@ -48,6 +48,7 @@ Rake::RDocTask.new do |rdoc|
 
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = "struct_packing #{version}"
-  rdoc.rdoc_files.include('README*')
+  rdoc.main = "README.rdoc"
+  rdoc.rdoc_files.include('*.rdoc')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
