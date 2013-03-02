@@ -18,6 +18,7 @@ module StructPacking
     
     protected
 
+    # get self class or eign class.
     def selfclass
       if defined?(self.class.selfclass)
         self.class.selfclass
@@ -27,30 +28,11 @@ module StructPacking
       end
     end
     
-  
-    def get_field_value(name)
-      selfclass.get_field_value(self, name)
-    end
-
-    def set_field_value(name, value)
-      selfclass.set_field_value(self, name, value)
-    end
-    
     # Get structure format string used in packing this object.
     #
     # This method work as just wrapper to same name class-method. 
     def internal_format
       selfclass.send(:internal_format)
-    end
-    
-    # Get field name list of this class.
-    def field_names
-      selfclass.field_names
-    end
-
-    # Get field type list of this class.
-    def field_types
-      selfclass.field_types
     end
     
     public
