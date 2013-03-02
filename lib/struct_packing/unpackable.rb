@@ -40,6 +40,7 @@ module StructPacking
       protected
       
       
+      # Instantiate and initialize object by value-array.
       def from_values(values)
         obj = self.new
         set_values_from_values_to_object(values, obj)
@@ -51,7 +52,12 @@ module StructPacking
         values = bytes.unpack( pack_template )
         set_values_from_values_to_object(values, obj)
       end
-      
+     
+      # Get field name list of this class.
+      def field_names
+        internal_format.keys
+      end
+
       def set_values_from_values_to_object(values, obj)
         
         field_names.zip(gather_array_field(values) ).each do |name,value|
@@ -61,6 +67,60 @@ module StructPacking
           end
         end
         obj
+      end
+     
+      def gather_array_field(value_array)
+        values = value_array.dup
+        
+        internal_format.collect do |name, type|
+
+          if type =~ /^struct\s*(\w*)\s*(?:\s*\[(\d+)\s*\])?\s*$/
+            struct_name = $1
+            arylen = $2
+            cls = Util.find_hier_mod(self, struct_name)
+            if arylen == nil
+              obj = cls.from_values( values[0, cls.send(:num_of_value)] )
+              values = values[cls.send(:num_of_value), values.length]
+            else
+              obj = []
+              
+              arylen.to_i.times do 
+                obj.push( cls.from_values( values[0, cls.send(:num_of_value)] ) )
+                values = values[cls.send(:num_of_value), values.length]
+              end
+            end
+            
+            obj
+          elsif type =~ /.*\[\w*(\d+)\w*\]\w*/
+            [0..$1.to_i].to_a.collect { values.shift }
+          else
+            values.shift
+          end
+        end
+      end
+      
+      def num_of_value
+        
+        nums = internal_format.collect do |name, type|
+          if type =~ /^struct\s*(\w*)\s*(?:\s*\[(\d+)\s*\])?\s*$/
+            struct_name = $1
+            arylen = $2
+            cls = Util.find_hier_mod(self, struct_name)
+            
+            if arylen == nil
+              cls.num_of_value
+            else
+              cls.num_of_value * arylen.to_i
+            end
+          else
+            1
+          end
+        end
+        
+        nums.inject(0) do |sum, num|
+          sum + num
+        end
+            
       end
       
     end
