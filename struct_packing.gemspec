@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "struct_packing"
-  s.version = "0.0.2"
+  s.version = "0.0.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["TOKITA Hiroshi"]
-  s.date = "2013-02-16"
+  s.date = "2013-03-02"
   s.description = "* Read/Write ruby object to byte array with C-like struct declarations."
   s.email = ["tokita.hiroshi@gmail.com"]
   s.extra_rdoc_files = [
